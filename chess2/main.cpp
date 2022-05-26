@@ -10,12 +10,20 @@ int main() {
             table[i][j] = new char[2];
         }
     }
-    //hello
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            //std::cin >> table[i][j][0] >> table[i][j][1];
+            std::cin >> table[i][j][0] >> table[i][j][1];
+            std::cin.ignore();
         }
     }
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            std::cout<< table[i][j][0] << table[i][j][1]<<" ";
+        }
+        std::cout << std::endl;
+    }
+
+
     board mb(table, &window);
     mb.run();
 }

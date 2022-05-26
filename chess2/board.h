@@ -7,4 +7,3 @@ public:
 	void run();
 	board(char***, sf::RenderWindow*);
 };
-//hi23
