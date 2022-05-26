@@ -34,6 +34,8 @@ sf::Texture* Peaces::RetTex (int i , int j) {
 	}
 }
 Peaces::Peaces(char***t) {
+	lighter_image.loadFromFile("images/lighter_blue.png");
+	lighter.loadFromImage(lighter_image);
 	table = t;
 	tex = new sf::Texture;
 	texo = new  sf::Texture*[12];
