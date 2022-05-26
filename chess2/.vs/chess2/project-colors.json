@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "61c380f2-30d0-48a3-a482-60c2e28c0255": {
+      "ProjectGuid": "61c380f2-30d0-48a3-a482-60c2e28c0255",
+      "DisplayName": "chess2",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
