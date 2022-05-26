@@ -31,25 +31,40 @@ void board::run() {
     }
     window->setFramerateLimit(90);
     updatesprite();
-    bool eventstatus = false;
+    bool lighterstatus = false;
+    bool leftclick = false;
  
+    int leftclickx= 0, leftclicky=0;
     while (window->isOpen())
     {
         sf::Event event;
+        window->clear();
+        int x = mush.getPosition(*window).x / 100;
+        int y = mush.getPosition(*window).y / 100;
+        //leftclick = false;
         while (window->pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window->close();
             if (event.type == sf::Event::LostFocus) {
-                eventstatus = false;
+                lighterstatus = false;
                 std::cout << "lost" << std::endl;
             }
             if (event.type == sf::Event::GainedFocus) {
-                eventstatus = true;
+                lighterstatus = true;
                 std::cout << "gained" << std::endl;
             }
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                //lighterstatus = false;
+                leftclick = true;
+                leftclickx = x;
+                leftclicky = y;
+                std::cout << x << "   " << y << std::endl;
+
+            }
         }
-        window->clear();
+        
 
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -58,15 +73,20 @@ void board::run() {
         }
 
 
+        
         if (mush.getPosition(*window).x >= 0 && mush.getPosition(*window).y >= 0 &&
-            mush.getPosition(*window).x < 800 && mush.getPosition(*window).y < 800 &&
-            eventstatus) {
-            int x = mush.getPosition(*window).x / 100;
-            int y = mush.getPosition(*window).y / 100;
-            std::cout << x << "   " << y << std::endl;
-            drawlighter(x, y);
-        }
+            mush.getPosition(*window).x < 800 && mush.getPosition(*window).y < 800) {
+                {
+                    if (lighterstatus) {
+                        drawlighter(x, y);
 
+                    }
+                    if (leftclick) {
+                        drawleftclick(leftclickx, leftclicky);
+                    }
+                }
+        }
+        
         
 
         drawpeaces();
@@ -99,6 +119,13 @@ void board::drawlighter(int x, int y) {
     sf::Sprite lighterS;
     
     lighterS.setTexture(peaces.lighter);
+    lighterS.setPosition(x * 100, y * 100);
+    window->draw(lighterS);
+}
+void board::drawleftclick(int x, int y) {
+    sf::Sprite lighterS;
+
+    lighterS.setTexture(peaces.leftclick);
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);
 }

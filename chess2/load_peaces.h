@@ -8,6 +8,8 @@ public:
 	sf::Image image;
 	sf::Image lighter_image;
 	sf::Texture lighter;
+	sf::Image leftclick_image;
+	sf::Texture leftclick;
 	sf::Texture* RetTex(int  ,int );
 	Peaces(char***);
 

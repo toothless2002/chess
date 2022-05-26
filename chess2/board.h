@@ -14,4 +14,5 @@ public:
 	void drawpeaces();
 	void updatesprite();
 	void drawlighter(int, int);
+	void drawleftclick(int, int);
 };
