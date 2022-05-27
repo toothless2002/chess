@@ -88,8 +88,17 @@ void board::run() {
                     firstclicks = false;
                     continue;
                 }
+                bool flag = false;
+                for (int i = 0; i < pmoves.size(); i=i+2) {
+                    if (leftclicky == pmoves[i] && leftclickx == pmoves[i+1]) {
+                        flag = true;
+                        cout << leftclickx << " " << leftclicky << endl;
+                    }
+                }
+                if (flag) {
                 move(firstclickx, firstclicky, leftclickx, leftclicky);
-                cout << firstclickx << " " << firstclicky << " " << leftclickx << " " << leftclicky << endl;
+               // cout << firstclickx << " " << firstclicky << " " << leftclickx << " " << leftclicky << endl;
+                }
                 firstclicks = false;
                 continue;
             }
@@ -147,10 +156,14 @@ void board::drawdot(int x, int y) {
 void board::drawleftclick(int x, int y) {
     sf::Sprite lighterS;
     std::vector<char>a;
+    pmoves.clear();
     if (Ptable[y][x] != NULL) {
         a = Ptable[y][x]->p_moves();
         for (int i = 0; i < a.size(); i = i + 8) {
             int* f = xy(a[4 + i], a[5 + i]);
+            pmoves.push_back(f[0]);
+            pmoves.push_back(f[1]);
+
             drawdot(f[1], f[0]);
             delete f;
         }

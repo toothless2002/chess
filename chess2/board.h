@@ -13,6 +13,7 @@ public:
 	sf::Mouse mush;
 	int firstclickx ,firstclicky;
 	bool firstclicks;
+	std::vector<int> pmoves;
 	void run();
 	board(char***, sf::RenderWindow*,mohre***);
 	void drawpeaces();
