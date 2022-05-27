@@ -3,6 +3,7 @@
 using namespace std;
 vector <mohre*> blacks;
 vector <mohre*> whites;
+
 char* xy(int x, int y) {
     char* a = new char[2];
     a[0] = 'a' + y;
@@ -405,11 +406,11 @@ vector<char> queen::p_moves()
         bool flag = true;
         while (flag)
         {
-            if (!((0 <= x + xym[i][0] * j && x + xym[i][0] * j < 8) && (0 <= y + xym[i][1] * j && y + xym[i][1] * j < 8))) {
+            if ((!((0 <= x + xym[i][0] * j && x + xym[i][0] * j < 8) && (0 <= y + xym[i][1] * j && y + xym[i][1] * j < 8))) || (table[x + xym[i][0] * j][y + xym[i][1] * j][0] == 'K')) {
                 flag = false;
                 continue;
             }
-            if (!(table[x + xym[i][0] * j][y + xym[i][1] * j][1] == '-')) {
+            if (!((table[x + xym[i][0] * j][y + xym[i][1] * j][1] == '-'))) {
                 flag = false;
             }
             if (table[x + xym[i][0] * j][y + xym[i][1] * j][1] != color) {
@@ -509,7 +510,7 @@ vector<char> bishop::p_moves()
         bool flag = true;
         while (flag)
         {
-            if (!((0 <= x + xym[i][0] * j && x + xym[i][0] * j < 8) && (0 <= y + xym[i][1] * j && y + xym[i][1] * j < 8))) {
+            if ((!((0 <= x + xym[i][0] * j && x + xym[i][0] * j < 8) && (0 <= y + xym[i][1] * j && y + xym[i][1] * j < 8))) || (table[x + xym[i][0] * j][y + xym[i][1] * j][0] == 'K')) {
                 flag = false;
                 continue;
             }
@@ -701,7 +702,7 @@ vector<char> rook::p_moves()
         bool flag = true;
         while (flag)
         {
-            if (!((0 <= x + xym[i][0] * j && x + xym[i][0] * j < 8) && (0 <= y + xym[i][1] * j && y + xym[i][1] * j < 8))) {
+            if ((!((0 <= x + xym[i][0] * j && x + xym[i][0] * j < 8) && (0 <= y + xym[i][1] * j && y + xym[i][1] * j < 8))) || (table[x + xym[i][0] * j][y + xym[i][1] * j][0] == 'K')) {
                 flag = false;
                 continue;
             }

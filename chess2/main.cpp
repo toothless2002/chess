@@ -56,16 +56,9 @@ int main() {
     for (int i = 0; i < whites.size(); i++) {
         Ptable[whites[i]->x][whites[i]->y] = whites[i];
     }
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            if(Ptable[i][j] != NULL)
-            std::cout<< Ptable[i][j]->x << Ptable[i][j]->y<<" ";
-
-        }
-        std::cout << std::endl;
-    }
 
 
-    board mb(table, &window,Ptable);
+
+    board mb(table, &window,Ptable,'W');
     mb.run();
 }

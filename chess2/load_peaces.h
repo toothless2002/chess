@@ -15,6 +15,8 @@ public:
 	sf::Texture greendot;
 	sf::Image reddot_image;
 	sf::Texture reddot;
+	sf::Image gg_image;
+	sf::Texture gg;
 	sf::Texture* RetTex(int  ,int );
 	Peaces(char***);
 

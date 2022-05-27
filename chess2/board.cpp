@@ -4,8 +4,9 @@
 #include <vector>
 #include <iostream>
 
-board::board(char*** t, sf::RenderWindow*w ,mohre*** pt):peaces(t) {
+board::board(char*** t, sf::RenderWindow*w ,mohre*** pt,char b):peaces(t) {
     this->table = t;
+    this->turn = b;
     this->Ptable = pt;
     this->window = w;
 }
@@ -97,16 +98,21 @@ void board::run() {
                 }
                 if (flag) {
                 move(firstclickx, firstclicky, leftclickx, leftclicky);
+                turn = (turn == 'W') ? 'B' : 'W';
                // cout << firstclickx << " " << firstclicky << " " << leftclickx << " " << leftclicky << endl;
                 }
                 firstclicks = false;
                 continue;
             }
             if (firstclicks == false) {
-                if (Ptable[leftclicky][leftclickx] != NULL) {
-                    firstclickx = leftclickx;
-                    firstclicky = leftclicky;
-                    firstclicks = true;
+                if (Ptable[leftclicky][leftclickx] != NULL ) {
+                    if (Ptable[leftclicky][leftclickx]->color == turn) {
+                        firstclickx = leftclickx;
+                        firstclicky = leftclicky;
+                        firstclicks = true;
+                    }
+                    else
+                        continue;
                 }
             }
             drawleftclick(leftclickx, leftclicky);

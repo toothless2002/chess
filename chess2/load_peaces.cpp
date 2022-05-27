@@ -44,6 +44,8 @@ Peaces::Peaces(char***t) {
 	greendot.loadFromImage(greendot_image);
 	reddot_image.loadFromFile("images/dot_red.png");
 	reddot.loadFromImage(reddot_image);
+	gg_image.loadFromFile("images/gg.png");
+	gg.loadFromImage(gg_image);
 	table = t;
 	tex = new sf::Texture;
 	texo = new  sf::Texture*[12];
