@@ -11,6 +11,10 @@ public:
 	sf::Texture lighter;
 	sf::Image leftclick_image;
 	sf::Texture leftclick;
+	sf::Image greendot_image;
+	sf::Texture greendot;
+	sf::Image reddot_image;
+	sf::Texture reddot;
 	sf::Texture* RetTex(int  ,int );
 	Peaces(char***);
 

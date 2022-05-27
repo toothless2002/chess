@@ -36,7 +36,7 @@ void board::run() {
         window->clear();
         int x = mush.getPosition(*window).x / 100;
         int y = mush.getPosition(*window).y / 100;
-        //leftclick = false;
+        leftclick = false;
         while (window->pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -51,13 +51,16 @@ void board::run() {
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                //lighterstatus = false;
-                leftclick = true;
-                leftclickx = x;
-                leftclicky = y;
-                std::cout << x << "   " << y << std::endl;
+                if (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                    //lighterstatus = false;
+                    leftclick = true;
+                    leftclickx = x;
+                    leftclicky = y;
+                    //std::cout << x << "   " << y << std::endl;
+                }
 
             }
+            
         }
         
 
@@ -68,6 +71,7 @@ void board::run() {
         }
 
 
+        drawpeaces();
         
         if (mush.getPosition(*window).x >= 0 && mush.getPosition(*window).y >= 0 &&
             mush.getPosition(*window).x < 800 && mush.getPosition(*window).y < 800) {
@@ -76,15 +80,31 @@ void board::run() {
                         drawlighter(x, y);
 
                     }
-                    if (leftclick) {
-                        drawleftclick(leftclickx, leftclicky);
-                    }
                 }
+        }
+        if (leftclick||firstclicks) {
+            if (firstclicks == true && leftclick) {
+                if (firstclickx == leftclickx && firstclicky == leftclicky) {
+                    firstclicks = false;
+                    continue;
+                }
+                move(firstclickx, firstclicky, leftclickx, leftclicky);
+                cout << firstclickx << " " << firstclicky << " " << leftclickx << " " << leftclicky << endl;
+                firstclicks = false;
+                continue;
+            }
+            if (firstclicks == false) {
+                if (Ptable[leftclicky][leftclickx] != NULL) {
+                    firstclickx = leftclickx;
+                    firstclicky = leftclicky;
+                    firstclicks = true;
+                }
+            }
+            drawleftclick(leftclickx, leftclicky);
         }
         
         
 
-        drawpeaces();
         window->display();
     }
     
@@ -96,7 +116,7 @@ void board::drawpeaces() {
 void board::updatesprite() {
     for (int i = 0; i < sprites.size(); i++)
         delete sprites[i];
-    
+    sprites.clear();
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if (table[i][j][0] != '-') {
@@ -117,24 +137,39 @@ void board::drawlighter(int x, int y) {
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);
 }
+void board::drawdot(int x, int y) {
+    sf::Sprite lighterS;
+
+    lighterS.setTexture(peaces.greendot);
+    lighterS.setPosition(x * 100, y * 100);
+    window->draw(lighterS);
+}
 void board::drawleftclick(int x, int y) {
     sf::Sprite lighterS;
     std::vector<char>a;
-    if (x >= 0 && x < 8 && y >= 0 && y < 8) {
-        if (Ptable[y][x] != NULL) {
-            //cout << "get";
-            a = Ptable[y][x]->p_moves();
-            for (int i = 0; i < a.size(); i = i + 8) {
-                int* f = xy(a[4 + i], a[5 + i]);
-
-                std::cout << f[0] << f[1] << "  ";
-                drawlighter(f[1], f[0]);
-                delete f;
-            }
-            cout << endl;
+    if (Ptable[y][x] != NULL) {
+        a = Ptable[y][x]->p_moves();
+        for (int i = 0; i < a.size(); i = i + 8) {
+            int* f = xy(a[4 + i], a[5 + i]);
+            drawdot(f[1], f[0]);
+            delete f;
         }
     }
+    
     lighterS.setTexture(peaces.leftclick);
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);
+}
+void board::move(int a, int b, int x, int y) {
+    Ptable[y][x] = NULL;
+    table[y][x][0] = table[b][a][0];
+    table[y][x][1] = table[b][a][1];
+    table[b][a][0] = '-';
+    table[b][a][1] = '-';
+    Ptable[y][x] = Ptable[b][a];
+    Ptable[y][x]->x = y;
+    Ptable[y][x]->y = x;
+    Ptable[b][a] = NULL;
+    //cout << Ptable[b][a]->x << Ptable[b][a]->y;
+    updatesprite();
 }

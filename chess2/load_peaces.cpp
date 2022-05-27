@@ -40,6 +40,10 @@ Peaces::Peaces(char***t) {
 	lighter.loadFromImage(lighter_image);
 	leftclick_image.loadFromFile("images/lighter_green.png");
 	leftclick.loadFromImage(leftclick_image);
+	greendot_image.loadFromFile("images/dot_green.png");
+	greendot.loadFromImage(greendot_image);
+	reddot_image.loadFromFile("images/dot_red.png");
+	reddot.loadFromImage(reddot_image);
 	table = t;
 	tex = new sf::Texture;
 	texo = new  sf::Texture*[12];
