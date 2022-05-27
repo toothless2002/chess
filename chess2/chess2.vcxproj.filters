@@ -24,12 +24,18 @@
     <ClCompile Include="load_peaces.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mohre.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="load_peaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mohre.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

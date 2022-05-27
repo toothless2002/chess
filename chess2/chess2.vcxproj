@@ -148,10 +148,12 @@
     <ClCompile Include="board.cpp" />
     <ClCompile Include="load_peaces.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mohre.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
     <ClInclude Include="load_peaces.h" />
+    <ClInclude Include="mohre.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

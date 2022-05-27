@@ -4,14 +4,9 @@
 #include <vector>
 #include <iostream>
 
-board::board(char*** t, sf::RenderWindow* w):peaces(t) {
+board::board(char*** t, sf::RenderWindow*w ,mohre*** pt):peaces(t) {
     this->table = t;
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            std::cout << table[i][j][0] << table[i][j][1] << " ";
-        }
-        std::cout << std::endl;
-    }
+    this->Ptable = pt;
     this->window = w;
 }
 void board::run() {
@@ -124,7 +119,21 @@ void board::drawlighter(int x, int y) {
 }
 void board::drawleftclick(int x, int y) {
     sf::Sprite lighterS;
+    std::vector<char>a;
+    if (x >= 0 && x < 8 && y >= 0 && y < 8) {
+        if (Ptable[y][x] != NULL) {
+            //cout << "get";
+            a = Ptable[y][x]->p_moves();
+            for (int i = 0; i < a.size(); i = i + 8) {
+                int* f = xy(a[4 + i], a[5 + i]);
 
+                std::cout << f[0] << f[1] << "  ";
+                drawlighter(f[1], f[0]);
+                delete f;
+            }
+            cout << endl;
+        }
+    }
     lighterS.setTexture(peaces.leftclick);
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);

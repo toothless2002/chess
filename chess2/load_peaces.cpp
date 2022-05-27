@@ -2,6 +2,7 @@
 #include "load_peaces.h"
 #include <iostream>
 #include "board.h"
+
 sf::Texture* Peaces::RetTex (int i , int j) {
 	char n[2] = { table[i][j][0],table[i][j][1] };
 	if (n[1] == 'W') {
@@ -11,7 +12,7 @@ sf::Texture* Peaces::RetTex (int i , int j) {
 			return(texo[1]);
 		if (n[0] == 'B')
 			return(texo[2]);
-		if (n[0] == 'K')
+		if (n[0] == 'N')
 			return(texo[3]);
 		if (n[0] == 'R')
 			return(texo[4]);
@@ -25,13 +26,14 @@ sf::Texture* Peaces::RetTex (int i , int j) {
 			return(texo[7]);
 		if (n[0] == 'B')
 			return(texo[8]);
-		if (n[0] == 'K')
+		if (n[0] == 'N')
 			return(texo[9]);
 		if (n[0] == 'R')
 			return(texo[10]);
 		if (n[0] == 'P')
 			return(texo[11]);
 	}
+	std::cout << "not workin";
 }
 Peaces::Peaces(char***t) {
 	lighter_image.loadFromFile("images/lighter_blue.png");
