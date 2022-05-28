@@ -9,6 +9,16 @@ board::board(char*** t, sf::RenderWindow*w ,mohre*** pt,char b):peaces(t) {
     this->turn = b;
     this->Ptable = pt;
     this->window = w;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (Ptable[i][j] != NULL) {
+                if (Ptable[i][j]->color == 'B' && Ptable[i][j]->typ == 'K')
+                    blackking = Ptable[i][j];
+                if (Ptable[i][j]->color == 'W' && Ptable[i][j]->typ == 'K')
+                    whiteking = Ptable[i][j];
+            }
+        }
+    }
 }
 void board::run() {
     sf::RectangleShape** rects = new sf::RectangleShape * [8];
@@ -110,6 +120,8 @@ void board::run() {
                         firstclickx = leftclickx;
                         firstclicky = leftclicky;
                         firstclicks = true;
+                        mate(4, Ptable[leftclicky][leftclickx]);
+                        def(4, Ptable[leftclicky][leftclickx]);
                     }
                     else
                         continue;
@@ -118,8 +130,26 @@ void board::run() {
             drawleftclick(leftclickx, leftclicky);
         }
         
-        
-
+        if (blackking->imchecked()) {
+            drawlighterred(blackking->y , blackking->x );
+            bool check=true;
+            for (int i = 0; i < blacks.size(); i++) {
+                if (blacks[i]->p_moves().size() > 0)
+                    check= false;
+            }
+            if(check)
+            cout << "b mated";
+        }
+        if (whiteking->imchecked()) {
+            drawlighterred(whiteking->y , whiteking->x );
+            bool check = true;
+            for (int i = 0; i < whites.size(); i++) {
+                if (whites[i]->p_moves().size() > 0)
+                    check = false;
+            }
+            if (check)
+            cout << "w mated";
+        }
         window->display();
     }
     
@@ -152,10 +182,31 @@ void board::drawlighter(int x, int y) {
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);
 }
+void board::drawlighterred(int x, int y) {
+    sf::Sprite lighterS;
+
+    lighterS.setTexture(peaces.lighterred);
+    lighterS.setPosition(x * 100, y * 100);
+    window->draw(lighterS);
+}
 void board::drawdot(int x, int y) {
     sf::Sprite lighterS;
 
     lighterS.setTexture(peaces.greendot);
+    lighterS.setPosition(x * 100, y * 100);
+    window->draw(lighterS);
+}
+void board::drawgg(int x, int y) {
+    sf::Sprite lighterS;
+
+    lighterS.setTexture(peaces.gg);
+    lighterS.setPosition(x * 100, y * 100);
+    window->draw(lighterS);
+}
+void board::drawreddot(int x, int y) {
+    sf::Sprite lighterS;
+
+    lighterS.setTexture(peaces.reddot);
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);
 }
@@ -166,11 +217,29 @@ void board::drawleftclick(int x, int y) {
     if (Ptable[y][x] != NULL) {
         a = Ptable[y][x]->p_moves();
         for (int i = 0; i < a.size(); i = i + 8) {
+            bool good = false;
+            bool bad = false;
             int* f = xy(a[4 + i], a[5 + i]);
             pmoves.push_back(f[0]);
             pmoves.push_back(f[1]);
-
-            drawdot(f[1], f[0]);
+            for (int j = 0; j < gmoves.size(); j = j + 2) {
+                if (f[0] == gmoves[j] && f[1] == gmoves[j + 1]) {
+                    good = true;
+                    break;
+                }
+            }
+            for (int j = 0; j < bmoves.size(); j = j + 2) {
+                if (f[0] == bmoves[j] && f[1] == bmoves[j + 1]) {
+                    bad = true;
+                    break;
+                }
+            }
+            if (good)
+                drawgg(f[1], f[0]);
+            else if(bad)
+                drawreddot(f[1], f[0]);
+            else
+                drawdot(f[1], f[0]);
             delete f;
         }
     }
@@ -189,6 +258,247 @@ void board::move(int a, int b, int x, int y) {
     Ptable[y][x]->x = y;
     Ptable[y][x]->y = x;
     Ptable[b][a] = NULL;
-    //cout << Ptable[b][a]->x << Ptable[b][a]->y;
     updatesprite();
+}
+bool board::mate(int m,mohre* s) {
+    if (m == 1) {
+        vector<mohre*>* turncolor;
+        if (s->color == 'W')
+            turncolor = &blacks;
+        else
+            turncolor = &whites;
+        bool retans = false;
+        bool checkmated = true;
+        for (int i = 0; i < turncolor->size(); i++) {
+            vector <char> v;
+            v = (*turncolor)[i]->p_moves();
+            if (v.size() > 0) {
+                checkmated = false;
+            }
+        }
+        if (!((*turncolor)[0]->imchecked()))
+            checkmated = false;
+        if (checkmated) {
+            retans = true;
+        }
+        return retans;
+    }
+    if (m == 3) {
+        vector<mohre*>* turncolor;
+        if (s->color == 'W')
+            turncolor =&blacks;
+        else 
+            turncolor = &whites;
+        bool retans = true;
+        int counter = 0;
+        int counter2 = 0;
+        for (int i = 0; i < turncolor->size(); i++) {
+            vector <char> v;
+            v = ( * turncolor)[i]->p_moves();
+            for (int j = 0; j < v.size(); j = j + 8) {
+                char* onemove = new char[8];
+                for (int k = 0; k < 8; k++) {
+                    onemove[k] = v[j + k];
+                }
+                (*turncolor)[i]->domove(onemove);
+                counter++;
+                if (mate(m - 1,s))
+                    counter2++;
+                (*turncolor)[i]->undomove(onemove);
+                delete onemove;
+            }
+        }
+        if (counter == counter2 && counter > 0)
+            return true;
+        if (counter == counter2 && counter == 0)
+            if (((*turncolor)[0]->imchecked()))
+                return true;
+        return false;
+    }
+    if (m == 2) {
+        vector<mohre*>* turncolor;
+        if (s->color == 'B')
+            turncolor = &blacks;
+        else
+            turncolor = &whites;
+        bool retans = false;
+        for (int i = 0; i < turncolor->size(); i++) {
+            vector <char> v;
+            v = (*turncolor)[i]->p_moves();
+            for (int j = 0; j < v.size(); j = j + 8) {
+                char* onemove = new char[8];
+                for (int k = 0; k < 8; k++) {
+                    onemove[k] = v[j + k];
+                }
+                (*turncolor)[i]->domove(onemove);
+                if (mate(m - 1,s))
+                    retans = true;
+                (*turncolor)[i]->undomove(onemove);
+                delete onemove;
+
+            }
+        }
+        return retans;
+    }
+    if (m == 4) {
+        gmoves.clear();
+        vector <char> v;
+        v = s->p_moves();
+        int counter = 0;
+        vector <char> tans(0);
+        for (int j = 0; j < v.size(); j = j + 8) {
+            char* onemove = new char[8];
+            for (int k = 0; k < 8; k++) {
+                onemove[k] = v[j + k];
+            }
+            s->domove(onemove);
+            if (mate(m - 1,s)) {
+                counter = counter + 8;
+                for (int k = 0; k < 8; k++) {
+                    tans.push_back(onemove[k]);
+                }
+            }
+            s->undomove(onemove);
+            delete onemove;
+        }
+        for (int i = 0; i < tans.size(); i = i + 8) {
+            int* f = xy(tans[4 + i], tans[5 + i]);
+            gmoves.push_back(f[0]);
+            gmoves.push_back(f[1]);
+            delete f;
+        }
+        return false;
+    }
+}
+bool board::def(int m, mohre* s) {
+    if (m == 0) {
+        vector<mohre*>* turncolor;
+        if (s->color == 'B')
+            turncolor = &blacks;
+        else
+            turncolor = &whites;
+        bool checkmated = true;
+        for (int i = 0; i < turncolor->size(); i++) {
+            vector <char> v;
+            v = (*turncolor)[i]->p_moves();
+            if (v.size() > 0) {
+                checkmated = false;
+            }
+        }
+        if (!((*turncolor)[0]->imchecked()))
+            checkmated = false;
+        if (checkmated) {
+            return true;
+        }
+        return false;
+    }
+    if (m == 1) {
+        vector<mohre*>* turncolor;
+        if (s->color == 'W')
+            turncolor = &blacks;
+        else
+            turncolor = &whites;
+        bool retans = false;
+        for (int i = 0; i < turncolor->size(); i++) {
+            vector <char> v;
+            v = (*turncolor)[i]->p_moves();
+            for (int j = 0; j < v.size(); j = j + 8) {
+                char* onemove = new char[8];
+                for (int k = 0; k < 8; k++) {
+                    onemove[k] = v[j + k];
+                }
+                (*turncolor)[i]->domove(onemove);
+                if (def(m - 1,s))
+                    retans = true;
+                (*turncolor)[i]->undomove(onemove);
+                delete onemove;
+            }
+        }
+        return retans;
+    }
+    if (m == 3) {
+        vector<mohre*>* turncolor;
+        if (s->color == 'W')
+            turncolor = &blacks;
+        else
+            turncolor = &whites;
+        bool retans = false;
+        for (int i = 0; i < turncolor->size(); i++) {
+            vector <char> v;
+            v = (*turncolor)[i]->p_moves();
+            for (int j = 0; j < v.size(); j = j + 8) {
+                char* onemove = new char[8];
+                for (int k = 0; k < 8; k++) {
+                    onemove[k] = v[j + k];
+                }
+                (*turncolor)[i]->domove(onemove);
+                if (def(m - 1,s))
+                    retans = true;
+                (*turncolor)[i]->undomove(onemove);
+                delete onemove;
+            }
+        }
+        return retans;
+    }
+    if (m == 2) {
+        vector<mohre*>* turncolor;
+        if (s->color == 'B')
+            turncolor = &blacks;
+        else
+            turncolor = &whites;
+        int counter = 0;
+        int counter2 = 0;
+        for (int i = 0; i < turncolor->size(); i++) {
+            vector <char> v;
+            v = (*turncolor)[i]->p_moves();
+            for (int j = 0; j < v.size(); j = j + 8) {
+                char* onemove = new char[8];
+                for (int k = 0; k < 8; k++) {
+                    onemove[k] = v[j + k];
+                }
+                (*turncolor)[i]->domove(onemove);
+                counter++;
+                if (def(m - 1,s))
+                    counter2++;
+                (*turncolor)[i]->undomove(onemove);
+                delete onemove;
+
+            }
+        }
+        if (counter == counter2 && counter > 0)
+            return true;
+        if (counter == counter2 && counter == 0)
+            if ((*turncolor)[0]->imchecked())
+                return true;
+        return false;
+    }
+    if (m == 4) {
+        bmoves.clear();
+        vector <char> v;
+        v = s->p_moves();
+        int counter = 0;
+        vector <char> tans(0);
+        for (int j = 0; j < v.size(); j = j + 8) {
+            char* onemove = new char[8];
+            for (int k = 0; k < 8; k++) {
+                onemove[k] = v[j + k];
+            }
+            s->domove(onemove);
+            if (def(m - 1, s)) {
+                counter = counter + 8;
+                for (int k = 0; k < 8; k++) {
+                    tans.push_back(onemove[k]);
+                }
+            }
+            s->undomove(onemove);
+            delete onemove;
+        }
+        for (int i = 0; i < tans.size(); i = i + 8) {
+            int* f = xy(tans[4 + i], tans[5 + i]);
+            bmoves.push_back(f[0]);
+            bmoves.push_back(f[1]);
+            delete f;
+        }
+        return false;
+    }
 }

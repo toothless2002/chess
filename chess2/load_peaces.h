@@ -9,6 +9,8 @@ public:
 	sf::Image image;
 	sf::Image lighter_image;
 	sf::Texture lighter;
+	sf::Image lighterred_image;
+	sf::Texture lighterred;
 	sf::Image leftclick_image;
 	sf::Texture leftclick;
 	sf::Image greendot_image;

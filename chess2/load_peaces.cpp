@@ -40,6 +40,8 @@ Peaces::Peaces(char***t) {
 	lighter.loadFromImage(lighter_image);
 	leftclick_image.loadFromFile("images/lighter_green.png");
 	leftclick.loadFromImage(leftclick_image);
+	lighterred_image.loadFromFile("images/lighter_red.png");
+	lighterred.loadFromImage(lighterred_image);
 	greendot_image.loadFromFile("images/dot_green.png");
 	greendot.loadFromImage(greendot_image);
 	reddot_image.loadFromFile("images/dot_red.png");
