@@ -19,6 +19,64 @@ board::board(char*** t, sf::RenderWindow*w ,mohre*** pt,char b):peaces(t) {
             }
         }
     }
+    //backuping 
+    backup_table = new char** [8];
+    for (int i = 0; i < 8; i++) {
+        backup_table[i] = new char* [8];
+        for (int j = 0; j < 8; j++) {
+            backup_table[i][j] = new char[2];
+            for (int k = 0; k < 2; k++) {
+                backup_table[i][j][k] = table[i][j][k];
+            }
+        }
+    }
+    
+    backup_blacks.clear();
+    for (int i = 0; i < blacks.size(); i++) {
+        if (blacks[i]->color == 'B' && blacks[i]->typ == 'P')
+            backup_blacks.push_back(new pawn(blacks[i]->color, blacks[i]->typ, backup_table, blacks[i]->x, blacks[i]->y));
+        else if (blacks[i]->color == 'B' && blacks[i]->typ == 'K')
+            backup_blacks.push_back(new king(blacks[i]->color, blacks[i]->typ, backup_table, blacks[i]->x, blacks[i]->y));
+        else if (blacks[i]->color == 'B' && blacks[i]->typ == 'Q')
+            backup_blacks.push_back(new queen(blacks[i]->color, blacks[i]->typ, backup_table, blacks[i]->x, blacks[i]->y));
+        else if (blacks[i]->color == 'B' && blacks[i]->typ == 'B')
+            backup_blacks.push_back(new bishop(blacks[i]->color, blacks[i]->typ, backup_table, blacks[i]->x, blacks[i]->y));
+        else if (blacks[i]->color == 'B' && blacks[i]->typ == 'N')
+            backup_blacks.push_back(new knight(blacks[i]->color, blacks[i]->typ, backup_table, blacks[i]->x, blacks[i]->y));
+        else if (blacks[i]->color == 'B' && blacks[i]->typ == 'R')
+            backup_blacks.push_back(new rook(blacks[i]->color, blacks[i]->typ, backup_table, blacks[i]->x, blacks[i]->y));
+
+    }
+    backup_whites.clear();
+    for (int i = 0; i < whites.size(); i++) {
+        if (whites[i]->color == 'W' && whites[i]->typ == 'P')
+            backup_whites.push_back(new pawn(whites[i]->color, whites[i]->typ, backup_table, whites[i]->x, whites[i]->y));
+        else if (whites[i]->color == 'W' && whites[i]->typ == 'K')
+            backup_whites.push_back(new king(whites[i]->color, whites[i]->typ, backup_table, whites[i]->x, whites[i]->y));
+        else if (whites[i]->color == 'W' && whites[i]->typ == 'Q')
+            backup_whites.push_back(new queen(whites[i]->color, whites[i]->typ, backup_table, whites[i]->x, whites[i]->y));
+        else if (whites[i]->color == 'W' && whites[i]->typ == 'B')
+            backup_whites.push_back(new bishop(whites[i]->color, whites[i]->typ, backup_table, whites[i]->x, whites[i]->y));
+        else if (whites[i]->color == 'W' && whites[i]->typ == 'N')
+            backup_whites.push_back(new knight(whites[i]->color, whites[i]->typ, backup_table, whites[i]->x, whites[i]->y));
+        else if (whites[i]->color == 'W' && whites[i]->typ == 'R')
+            backup_whites.push_back(new rook(whites[i]->color, whites[i]->typ, backup_table, whites[i]->x, whites[i]->y));
+    }
+
+    backup_Ptable = new mohre * *[8];
+    for (int i = 0; i < 8; i++) {
+        backup_Ptable[i] = new mohre * [8];
+        for (int j = 0; j < 8; j++) {
+            backup_Ptable[i][j] = NULL;
+        }
+    }
+    for (int i = 0; i < backup_whites.size(); i++) {
+        backup_Ptable[backup_whites[i]->x][backup_whites[i]->y] = backup_whites[i];
+    }
+    for (int i = 0; i < backup_blacks.size(); i++) {
+        backup_Ptable[backup_blacks[i]->x][backup_blacks[i]->y] = backup_blacks[i];
+    }
+    backup_turn = turn;
 }
 void board::run() {
     sf::RectangleShape** rects = new sf::RectangleShape * [8];
@@ -48,6 +106,7 @@ void board::run() {
         int x = mush.getPosition(*window).x / 100;
         int y = mush.getPosition(*window).y / 100;
         leftclick = false;
+        bool resets = false;
         while (window->pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -62,6 +121,8 @@ void board::run() {
             }
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
+                if (mush.getPosition(*window).x > 842 && mush.getPosition(*window).x < 942 && mush.getPosition(*window).y > 705 && mush.getPosition(*window).y < 745)
+                    resets = true;
                 if (x >= 0 && x < 8 && y >= 0 && y < 8) {
                     //lighterstatus = false;
                     leftclick = true;
@@ -150,6 +211,33 @@ void board::run() {
             if (check)
             cout << "w mated";
         }
+        if (resets) {
+            reset();
+            firstclicks = false;
+            continue;
+        }
+        sf::Text turntext;
+        turntext.setFont(peaces.font);
+        turntext.setCharacterSize(40);
+        turntext.setPosition(850, 350);
+        if(turn=='W')
+            turntext.setString("White");
+        else 
+            turntext.setString("Black");
+        sf::Text resetbot;
+        resetbot.setFont(peaces.font2);
+        resetbot.setCharacterSize(40);
+        resetbot.setPosition(850, 700);
+        resetbot.setString("Reset");
+        //resetbot.setColor(sf::Color::Cyan);
+        sf::RectangleShape resetedge;
+        //resetedge.setOutlineColor(sf::Color(0,0,200));
+        resetedge.setFillColor(sf::Color(0,0,200));
+        resetedge.setPosition(842, 705);
+        resetedge.setSize(sf::Vector2f(100, 40));
+        window->draw(resetedge);
+        window->draw(turntext);
+        window->draw(resetbot);
         window->display();
     }
     
@@ -501,4 +589,76 @@ bool board::def(int m, mohre* s) {
         }
         return false;
     }
+}
+void board::reset() {
+    table = new char** [8];
+    for (int i = 0; i < 8; i++) {
+        table[i] = new char* [8];
+        for (int j = 0; j < 8; j++) {
+            table[i][j] = new char[2];
+            for (int k = 0; k < 2; k++) {
+                table[i][j][k] = backup_table[i][j][k];
+            }
+        }
+    }
+
+    blacks.clear();
+    for (int i = 0; i < backup_blacks.size(); i++) {
+        if (backup_blacks[i]->color == 'B' && backup_blacks[i]->typ == 'P')
+            blacks.push_back(new pawn(backup_blacks[i]->color, backup_blacks[i]->typ, table, backup_blacks[i]->x, backup_blacks[i]->y));
+        else if (backup_blacks[i]->color == 'B' && backup_blacks[i]->typ == 'K')
+            blacks.push_back(new king(backup_blacks[i]->color, backup_blacks[i]->typ, table, backup_blacks[i]->x, backup_blacks[i]->y));
+        else if (backup_blacks[i]->color == 'B' && backup_blacks[i]->typ == 'Q')
+            blacks.push_back(new queen(backup_blacks[i]->color, backup_blacks[i]->typ, table, backup_blacks[i]->x, backup_blacks[i]->y));
+        else if (backup_blacks[i]->color == 'B' && backup_blacks[i]->typ == 'B')
+            blacks.push_back(new bishop(backup_blacks[i]->color, backup_blacks[i]->typ, table, backup_blacks[i]->x, backup_blacks[i]->y));
+        else if (backup_blacks[i]->color == 'B' && backup_blacks[i]->typ == 'N')
+            blacks.push_back(new knight(backup_blacks[i]->color, backup_blacks[i]->typ, table, backup_blacks[i]->x, backup_blacks[i]->y));
+        else if (backup_blacks[i]->color == 'B' && backup_blacks[i]->typ == 'R')
+            blacks.push_back(new rook(backup_blacks[i]->color, backup_blacks[i]->typ, table, backup_blacks[i]->x, backup_blacks[i]->y));
+
+    }
+    whites.clear();
+    for (int i = 0; i < backup_whites.size(); i++) {
+        if (backup_whites[i]->color == 'W' && backup_whites[i]->typ == 'P')
+            whites.push_back(new pawn(backup_whites[i]->color, backup_whites[i]->typ, table, backup_whites[i]->x, backup_whites[i]->y));
+        else if (backup_whites[i]->color == 'W' && backup_whites[i]->typ == 'K')
+            whites.push_back(new king(backup_whites[i]->color, backup_whites[i]->typ, table, backup_whites[i]->x, backup_whites[i]->y));
+        else if (backup_whites[i]->color == 'W' && backup_whites[i]->typ == 'Q')
+            whites.push_back(new queen(backup_whites[i]->color, backup_whites[i]->typ, table, backup_whites[i]->x, backup_whites[i]->y));
+        else if (backup_whites[i]->color == 'W' && backup_whites[i]->typ == 'B')
+            whites.push_back(new bishop(backup_whites[i]->color, backup_whites[i]->typ, table, backup_whites[i]->x, backup_whites[i]->y));
+        else if (backup_whites[i]->color == 'W' && backup_whites[i]->typ == 'N')
+            whites.push_back(new knight(backup_whites[i]->color, backup_whites[i]->typ, table, backup_whites[i]->x, backup_whites[i]->y));
+        else if (backup_whites[i]->color == 'W' && backup_whites[i]->typ == 'R')
+            whites.push_back(new rook(backup_whites[i]->color, backup_whites[i]->typ, table, backup_whites[i]->x, backup_whites[i]->y));
+
+    }
+
+    Ptable = new mohre * *[8];
+    for (int i = 0; i < 8; i++) {
+        Ptable[i] = new mohre * [8];
+        for (int j = 0; j < 8; j++) {
+            Ptable[i][j] = NULL;
+        }
+    }
+    for (int i = 0; i < whites.size(); i++) {
+        Ptable[whites[i]->x][whites[i]->y] = whites[i];
+    }
+    for (int i = 0; i < blacks.size(); i++) {
+        Ptable[blacks[i]->x][blacks[i]->y] = blacks[i];
+    }
+    turn = backup_turn;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (Ptable[i][j] != NULL) {
+                if (Ptable[i][j]->color == 'B' && Ptable[i][j]->typ == 'K')
+                    blackking = Ptable[i][j];
+                if (Ptable[i][j]->color == 'W' && Ptable[i][j]->typ == 'K')
+                    whiteking = Ptable[i][j];
+            }
+        }
+    }
+    peaces =  Peaces(table);
+    updatesprite();
 }

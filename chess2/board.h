@@ -8,12 +8,17 @@ public:
 	sf::RenderWindow* window;
 	std::vector <sf::Sprite*> sprites;
 	char*** table;
+	char*** backup_table;
 	mohre*** Ptable;
+	mohre*** backup_Ptable;
+	vector <mohre*> backup_whites;
+	vector <mohre*> backup_blacks;
 	Peaces peaces; 
 	sf::Mouse mush;
 	int firstclickx ,firstclicky;
 	bool firstclicks;
 	char turn;
+	char backup_turn;
 	vector<int> pmoves;
 	vector<int> gmoves;
 	vector<int> bmoves;
@@ -32,4 +37,5 @@ public:
 	void move(int, int, int, int);
 	bool mate(int,mohre*);
 	bool def(int, mohre*);
+	void reset();
 };

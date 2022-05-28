@@ -48,6 +48,8 @@ Peaces::Peaces(char***t) {
 	reddot.loadFromImage(reddot_image);
 	gg_image.loadFromFile("images/gg.png");
 	gg.loadFromImage(gg_image);
+	font.loadFromFile("fonts/Wall Notes.otf");
+	font2.loadFromFile("fonts/Lobster.ttf");
 	table = t;
 	tex = new sf::Texture;
 	texo = new  sf::Texture*[12];

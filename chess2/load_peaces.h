@@ -19,6 +19,8 @@ public:
 	sf::Texture reddot;
 	sf::Image gg_image;
 	sf::Texture gg;
+	sf::Font font;
+	sf::Font font2;
 	sf::Texture* RetTex(int  ,int );
 	Peaces(char***);
 

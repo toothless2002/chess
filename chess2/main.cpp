@@ -3,6 +3,7 @@
 #include "board.h"
 #include <vector>
 #include "mohre.h"
+//bakcup table ptable turn blacks whites
 using namespace std;
 int main() {
 	sf::RenderWindow window(sf::VideoMode(1000, 800), "Chess", sf::Style::Titlebar | sf::Style::Close);

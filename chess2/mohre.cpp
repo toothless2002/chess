@@ -18,7 +18,7 @@ int* xy(char x, char y) {
 }
 mohre::mohre(char color, char typ, char*** t, int x, int y)
 {
-    table = t;
+    this->table = t;
     this->x = x;
     this->y = y;
     this->color = color;
