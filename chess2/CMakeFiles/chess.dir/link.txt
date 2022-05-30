@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/chess.dir/src/main.cpp.o CMakeFiles/chess.dir/src/mohre.cpp.o CMakeFiles/chess.dir/src/board.cpp.o CMakeFiles/chess.dir/src/load_peaces.cpp.o -o chess  -lsfml-system -lsfml-window -lsfml-graphics 

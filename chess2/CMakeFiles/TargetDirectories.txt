@@ -1,0 +1,3 @@
+/home/hamidreza/chess/chess2/CMakeFiles/chess.dir
+/home/hamidreza/chess/chess2/CMakeFiles/edit_cache.dir
+/home/hamidreza/chess/chess2/CMakeFiles/rebuild_cache.dir
