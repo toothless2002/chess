@@ -164,13 +164,12 @@ void board::run() {
                 for (int i = 0; i < pmoves.size(); i=i+2) {
                     if (leftclicky == pmoves[i] && leftclickx == pmoves[i+1]) {
                         flag = true;
-                        cout << leftclickx << " " << leftclicky << endl;
                     }
                 }
                 if (flag) {
                 move(firstclickx, firstclicky, leftclickx, leftclicky);
                 turn = (turn == 'W') ? 'B' : 'W';
-               // cout << firstclickx << " " << firstclicky << " " << leftclickx << " " << leftclicky << endl;
+               
                 }
                 firstclicks = false;
                 continue;
@@ -181,8 +180,8 @@ void board::run() {
                         firstclickx = leftclickx;
                         firstclicky = leftclicky;
                         firstclicks = true;
-                        mate(4, Ptable[leftclicky][leftclickx]);
-                        def(4, Ptable[leftclicky][leftclickx]);
+                        //mate(4, Ptable[leftclicky][leftclickx]);
+                        //def(4, Ptable[leftclicky][leftclickx]);
                     }
                     else
                         continue;
@@ -198,8 +197,15 @@ void board::run() {
                 if (blacks[i]->p_moves().size() > 0)
                     check= false;
             }
-            if(check)
-            cout << "b mated";
+            if (check)
+            {
+                sf::Text endtext;
+                endtext.setFont(peaces.font);
+                endtext.setCharacterSize(25);
+                endtext.setPosition(800, 400);
+                endtext.setString("check mate");
+                window->draw(endtext);
+            }
         }
         if (whiteking->imchecked()) {
             drawlighterred(whiteking->y , whiteking->x );
@@ -209,7 +215,14 @@ void board::run() {
                     check = false;
             }
             if (check)
-            cout << "w mated";
+            {
+                sf::Text endtext;
+                endtext.setFont(peaces.font);
+                endtext.setCharacterSize(25);
+                endtext.setPosition(800, 400);
+                endtext.setString("check mate");
+                window->draw(endtext);
+            }
         }
         if (resets) {
             reset();
@@ -219,7 +232,7 @@ void board::run() {
         sf::Text turntext;
         turntext.setFont(peaces.font);
         turntext.setCharacterSize(40);
-        turntext.setPosition(850, 350);
+        turntext.setPosition(800, 350);
         if(turn=='W')
             turntext.setString("White");
         else 
