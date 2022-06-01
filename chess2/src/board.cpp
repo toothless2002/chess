@@ -79,6 +79,10 @@ board::board(char*** t, sf::RenderWindow*w ,mohre*** pt,char b):peaces(t) {
     backup_turn = turn;
 }
 void board::run() {
+    sf::RectangleShape sidepanel;
+    sidepanel.setFillColor(sf::Color(255, 166, 77));
+    sidepanel.setSize(sf::Vector2f(195, 800));
+    sidepanel.setPosition(805,0);
     sf::RectangleShape** rects = new sf::RectangleShape * [8];
     for (int i = 0; i < 8; i++) {
         rects[i] = new sf::RectangleShape[8];
@@ -103,6 +107,7 @@ void board::run() {
     {
         sf::Event event;
         window->clear();
+        window->draw(sidepanel);
         int x = mush.getPosition(*window).x / 100;
         int y = mush.getPosition(*window).y / 100;
         leftclick = false;
@@ -202,7 +207,7 @@ void board::run() {
                 sf::Text endtext;
                 endtext.setFont(peaces.font);
                 endtext.setCharacterSize(25);
-                endtext.setPosition(800, 400);
+                endtext.setPosition(805, 400);
                 endtext.setString("check mate");
                 window->draw(endtext);
             }
@@ -219,7 +224,7 @@ void board::run() {
                 sf::Text endtext;
                 endtext.setFont(peaces.font);
                 endtext.setCharacterSize(25);
-                endtext.setPosition(800, 400);
+                endtext.setPosition(805, 400);
                 endtext.setString("check mate");
                 window->draw(endtext);
             }
@@ -232,7 +237,7 @@ void board::run() {
         sf::Text turntext;
         turntext.setFont(peaces.font);
         turntext.setCharacterSize(40);
-        turntext.setPosition(800, 350);
+        turntext.setPosition(805, 350);
         if(turn=='W')
             turntext.setString("White");
         else 
@@ -245,7 +250,7 @@ void board::run() {
         //resetbot.setColor(sf::Color::Cyan);
         sf::RectangleShape resetedge;
         //resetedge.setOutlineColor(sf::Color(0,0,200));
-        resetedge.setFillColor(sf::Color(0,0,200));
+        resetedge.setFillColor(sf::Color(255,0,0));
         resetedge.setPosition(842, 705);
         resetedge.setSize(sf::Vector2f(100, 40));
         window->draw(resetedge);
@@ -283,12 +288,34 @@ void board::drawlighter(int x, int y) {
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);
 }
+void board::drawlighteryellow(int x, int y) {
+    sf::Sprite lighterS;
+    
+    lighterS.setTexture(peaces.lighteryellow);
+    lighterS.setPosition(x * 100, y * 100);
+    window->draw(lighterS);
+}
+
 void board::drawlighterred(int x, int y) {
     sf::Sprite lighterS;
 
     lighterS.setTexture(peaces.lighterred);
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);
+    if(Ptable[y][x]->color=='W'){
+        for(int i = 0 ; i<blacks.size();i++){
+            if(blacks[i]->iamchecking()){
+                drawlighteryellow(blacks[i]->y,blacks[i]->x);
+            }
+        }
+    }
+    if(Ptable[y][x]->color=='B'){
+        for(int i = 0 ; i<whites.size();i++){
+            if(whites[i]->iamchecking()){
+                drawlighteryellow(whites[i]->y,whites[i]->x);
+            }
+        }
+    }
 }
 void board::drawdot(int x, int y) {
     sf::Sprite lighterS;
@@ -310,6 +337,7 @@ void board::drawreddot(int x, int y) {
     lighterS.setTexture(peaces.reddot);
     lighterS.setPosition(x * 100, y * 100);
     window->draw(lighterS);
+    
 }
 void board::drawleftclick(int x, int y) {
     sf::Sprite lighterS;

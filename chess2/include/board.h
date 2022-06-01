@@ -29,6 +29,7 @@ public:
 	void drawpeaces();
 	void updatesprite();
 	void drawlighter(int, int);
+	void drawlighteryellow(int, int);
 	void drawlighterred(int, int);
 	void drawdot(int, int);
 	void drawreddot(int, int);
