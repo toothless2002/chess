@@ -6,7 +6,8 @@
 //bakcup table ptable turn blacks whites
 using namespace std;
 int main() {
-	sf::RenderWindow window(sf::VideoMode(1000, 800), "Chess", sf::Style::Titlebar | sf::Style::Close);
+    char starter;
+    cin >>starter;
     char*** table = new char** [8];
     for (int i = 0; i < 8; i++) {
         table[i] = new char* [8];
@@ -60,6 +61,7 @@ int main() {
 
 
 
-    board mb(table, &window,Ptable,'W');
+	sf::RenderWindow window(sf::VideoMode(1000, 800), "Chess", sf::Style::Titlebar | sf::Style::Close);
+    board mb(table, &window,Ptable,starter);
     mb.run();
 }
